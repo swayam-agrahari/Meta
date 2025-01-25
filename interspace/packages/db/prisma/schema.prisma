@@ -27,7 +27,7 @@ model Space {
   id            String          @id @unique @default(cuid())
   name          String
   width         Int
-  height        Int?
+  height        Int
   thumbnail     String?
   creatorId     String
   creator       User            @relation(fields: [creatorId], references: [id])
@@ -41,13 +41,14 @@ model spaceElements {
   x         Int
   y         Int
   element   Element @relation(fields: [elementId], references: [id])
-  space     Space   @relation(fields: [spaceId], references: [id])
+  space     Space   @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 }
 
 model Element {
   id            String          @id @unique @default(cuid())
   width         Int
   height        Int
+  static        Boolean
   imageUrl      String
   spaceElements spaceElements[]
   mapElements   mapElements[]
@@ -58,6 +59,7 @@ model Map {
   width       Int
   height      Int
   name        String
+  thumbnail   String?
   mapElements mapElements[]
 }
 
@@ -67,7 +69,7 @@ model mapElements {
   elementId String
   x         Int?
   y         Int?
-  map       Map     @relation(fields: [mapId], references: [id])
+  map       Map     @relation(fields: [mapId], references: [id], onDelete: Cascade)
   elements  Element @relation(fields: [elementId], references: [id])
 }
 
