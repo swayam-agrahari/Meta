@@ -6,7 +6,10 @@ import { JWT_SECRET } from "../config";
 
 export const userMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const header = req.headers.authorization;
-    const token = header?.split(" ")[1]
+
+    const token = header?.split(" ")[1];
+
+
     if (!token) {
         res.status(403).json({
             message: "Unauthorized"
@@ -14,14 +17,8 @@ export const userMiddleware = (req: Request, res: Response, next: NextFunction) 
         return
     }
     try {
-
         const decoded = JWT.verify(token, JWT_SECRET) as { role: string, userId: string }
-        if (decoded.role != "user") {
-            res.status(403).json({
-                message: "Unauthorized"
-            })
-            return
-        }
+        console.log("Generated Token Payload:", decoded);
         req.userId = decoded.userId
         next()
 
