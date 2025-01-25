@@ -91,11 +91,36 @@ router.post("/signin", async (req, res) => {
 })
 
 
-router.get("/elements", (req, res) => {
+router.get("/elements", async (req, res) => {
+    const elements = await client.element.findMany({})
+    if (!elements) {
+        res.status(400).json({
+            message: "No elements found"
+        })
+        return
+    }
+    res.json({
+        elements: elements
+    })
 
 })
 
-router.get("/avatars", (req, res) => {
+router.get("/avatars", async (req, res) => {
+    const avatars = await client.avatar.findMany({
+
+    })
+    if (!avatars) {
+        res.status(400).json({
+            message: "No avatars found"
+        })
+        return
+    }
+    res.json({
+        avatars: avatars.map((t) => ({
+            id: t.id,
+            imageUrl: t.imageUrl
+        }))
+    })
 
 })
 

@@ -10,24 +10,42 @@ userRouter.post("/metadata", userMiddleware, async (req, res) => {
         res.status(400).json({
             message: "Input validation error"
         })
+        return
     }
 
-    const response = await client.user.update({
-        where: {
-            id: req.userId
-        },
-        data: {
-            avatarId: parsedData.data?.avatarId
+    try {
+        const response = await client.user.update({
+            where: {
+                id: req.userId
+            },
+            data: {
+                avatarId: parsedData.data.avatarId
+            }
+        })
+
+        if (!response) {
+            res.status(400).json({
+                message: "Metadata update failed"
+            })
+            return
         }
-    })
-    res.json({
-        message: "Metadata updates successfully"
-    })
+        res.json({
+            message: "Metadata updates successfully"
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            message: "Metadata update failed"
+        })
+
+    }
+
+
 })
 
-userRouter.get("/metadata/bulk", async (req, res) => {
-    const array = req.query.ids as string;
-    const newArr = array?.split(",")
+userRouter.get("/metadata/bulk", userMiddleware, async (req, res) => {
+    const array = (req.query.ids ?? "[]") as string;
+    const newArr = (array).slice(1, array?.length - 1).split(",");
     try {
         const response = await client.user.findMany({
             where: {
@@ -40,7 +58,7 @@ userRouter.get("/metadata/bulk", async (req, res) => {
                 id: true
             }
         })
-
+        
         res.json({
             avatars: response.map((t) => ({
                 userId: t.id,
@@ -52,6 +70,7 @@ userRouter.get("/metadata/bulk", async (req, res) => {
         res.json({
             message: "wrong query params"
         })
+        return
 
     }
 
