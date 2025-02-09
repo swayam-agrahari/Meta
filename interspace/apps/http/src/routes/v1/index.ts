@@ -6,7 +6,6 @@ import { SigninSchema, SignupSchema } from "../../types";
 import client from "@interspace/db/client"
 import { hash, compare } from "../../scrypt"
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../../config";
 
 export const router = Router();
 
@@ -74,7 +73,7 @@ router.post("/signin", async (req, res) => {
         const token = jwt.sign({
             userId: user.id,
             role: user.role
-        }, JWT_SECRET)
+        }, process.env.JWT_SECRET || "anything")
 
         res.json({
             token: token

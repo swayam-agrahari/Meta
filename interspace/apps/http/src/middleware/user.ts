@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import JWT from "jsonwebtoken";
-import { JWT_SECRET } from "../config";
 
 
 
@@ -17,7 +16,7 @@ export const userMiddleware = (req: Request, res: Response, next: NextFunction) 
         return
     }
     try {
-        const decoded = JWT.verify(token, JWT_SECRET) as { role: string, userId: string }
+        const decoded = JWT.verify(token, process.env.JWT_SECRET || "anything") as { role: string, userId: string }
         console.log("Generated Token Payload:", decoded);
         req.userId = decoded.userId
         next()
