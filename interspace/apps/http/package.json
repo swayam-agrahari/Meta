@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npx esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --tsconfig=tsconfig.json",
+    "build": "npx esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --tsconfig=tsconfig.json --workspace @interspace/http",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -19,5 +19,9 @@
     "typescript": "^5.7.3",
     "zod": "^3.24.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "private": true,
+  "workspaces": [
+    "interspace/*"
+  ]
 }
