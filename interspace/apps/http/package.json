@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npx esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --tsconfig=tsconfig.json",
+    "dev": "node dist/index.js",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -11,7 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@interspace/db": "workspace:*",
+    "@interspace/db": "*",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "express": "^4.21.2",
