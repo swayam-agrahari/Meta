@@ -1,71 +1,56 @@
 "use client";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { useState, useEffect } from "react";
 
 export default function Game() {
     const router = useRouter();
-    const params = useParams();
-    const [spaceID, setSpaceID] = useState<string | null>(null);
-    const [iframeError, setIframeError] = useState<string | null>(null);
+    const [iframeError, setIframeError] = useState<boolean>(false);
 
     useEffect(() => {
-        const tokenId = localStorage.getItem("token");
-        if (!tokenId) {
-            console.log("Token is not provided");
-            router.push("/");
-            return;
+        try {
+
+            const tokenId = localStorage.getItem("token");
+            if (!tokenId) {
+                console.log("Token is not provided");
+                router.push("/login");
+                return;
+            }
+
+            const token = tokenId.split(" ")[1];
+            if (!token) {
+                console.log("Token is invalid format");
+                router.push("/login");
+                return;
+            }
+
+        } catch (error) {
+            console.error("Error accessing localStorage:", error);
+            router.push("/login");
         }
-        const token = tokenId?.split(" ")[1];
-        if (!token) {
-            console.log("Token is not provided");
-            router.push("/");
-            return;
-        }
-
-        if (!params.spaceId) {
-            console.log("Space ID is not provided");
-            router.push("/");
-            return;
-        }
-
-        const id = Array.isArray(params.spaceId) ? params.spaceId[0] : params.spaceId;
-        setSpaceID(id);
-
-        // Set up a script to inject into the iframe
-        const script = `
-            window.spaceId = "${id}";
-            window.token = "${token}";
-        `;
-
-        // Create a blob URL containing our script
-        const blob = new Blob([script], { type: 'text/javascript' });
-        const scriptUrl = URL.createObjectURL(blob);
-
-        // Update the game URL to include our script
-        setGameUrl(scriptUrl);
-
-        // Clean up the blob URL when component unmounts
-        return () => URL.revokeObjectURL(scriptUrl);
-    }, [params.spaceId, router]);
-
-    const [gameUrl, setGameUrl] = useState("");
+    }, [router]);
 
     const handleIframeError = (event: React.SyntheticEvent<HTMLIFrameElement, Event>) => {
-        setIframeError("Failed to load game. Please try again.");
+        setIframeError(true);
         console.error("Iframe loading error:", event);
     };
 
-    if (spaceID === null || !gameUrl) {
-        return null;
-    }
-
     if (iframeError) {
-        return <div className="text-red-500">{iframeError}</div>;
+        return (
+            <div className="flex flex-col items-center justify-center h-screen">
+                <h1 className="text-3xl font-bold mb-4">Content Not Found</h1>
+                <p className="mb-6">The game content couldn&apos;t be loaded.</p>
+                <button
+                    onClick={() => router.push("/")}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Return to Home
+                </button>
+            </div>
+        );
     }
 
-    // Construct the final URL with our script included
-    const baseUrl = "https://interspace-frontend.vercel.app/index.html";
-    const finalUrl = `${baseUrl}`;
+    const finalUrl = "https://interspace-frontend.vercel.app/";
 
     return (
         <main className="w-screen h-screen">

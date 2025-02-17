@@ -14,8 +14,10 @@ import {
     Copy,
 } from 'lucide-react';
 import axios from "axios";
+import Image from "next/image";
+import React from "react";
 type GameMap = {
-    id: string;
+    id: number;
     name: string;
     image: string;
     description: string;
@@ -23,19 +25,19 @@ type GameMap = {
 
 const GAME_MAPS: GameMap[] = [
     {
-        id: 'classic',
+        id: 1,
         name: 'Classic Arena',
         image: 'https://images.unsplash.com/photo-1536152470836-b943b246224c?w=800&auto=format&fit=crop&q=60',
         description: 'Traditional battle arena with balanced terrain',
     },
     {
-        id: 'cyber',
+        id: 2,
         name: 'Cyber City',
         image: 'https://images.unsplash.com/photo-1515705576963-95cad62945b6?w=800&auto=format&fit=crop&q=60',
         description: 'Futuristic cityscape with vertical gameplay',
     },
     {
-        id: 'space',
+        id: 3,
         name: 'Space Station',
         image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop&q=60',
         description: 'Zero-gravity combat environment',
@@ -47,7 +49,7 @@ export default function Lander() {
 
     const [view, setView] = useState<'menu' | 'create' | 'join'>('menu');
     const [spaceName, setSpaceName] = useState<string>("")
-    const [selectedMap, setSelectedMap] = useState<string | null>(null);
+    const [selectedMap, setSelectedMap] = useState<number | null>(null);
     const [spaceID, setSpaceID] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -100,7 +102,7 @@ export default function Lander() {
         e.preventDefault();
         setLoading(true);
         console.log("Joining space here", spaceID, joinSpaceId)
-        if (joinSpaceId) {
+        if (joinSpaceId && typeof joinSpaceId === 'string') {
             // setSpaceId(joinSpaceId);
             // setView('join');
             navigate.push(`/game/${joinSpaceId}`)
@@ -252,9 +254,9 @@ export default function Lander() {
                                                 : ''
                                                 }`}
                                         >
-                                            <img
-                                                // width={200}
-                                                // height={200}
+                                            <Image
+                                                width={200}
+                                                height={200}
                                                 src={map.image}
                                                 alt={map.name}
 
@@ -291,7 +293,7 @@ export default function Lander() {
                                 </div>
                                 <div className="flex items-center justify-center gap-4 mb-8">
                                     <code className="px-4 py-2 bg-gray-900/50 rounded-lg text-xl font-mono">
-                                        {spaceID}
+                                        {spaceID || 'Loading...'}
                                     </code>
                                     <button
                                         onClick={copySpaceId}
@@ -320,7 +322,7 @@ export default function Lander() {
 
                 {view === 'join' && (
                     <div className="max-w-3xl mx-auto">
-                        {!spaceID ? (
+                        {!spaceID &&
                             <>
                                 <button
                                     onClick={() => setView('menu')}
@@ -352,26 +354,7 @@ export default function Lander() {
                                     </button>
                                 </form>
                             </>
-                        ) : (
-                            <div className="relative">
-                                <button
-                                    onClick={() => {
-                                        setView('menu');
-                                        setSpaceID(null);
-                                        setJoinSpaceId('');
-                                    }}
-                                    className="absolute -top-12 left-0 flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-                                >
-                                    <X className="w-4 h-4" />
-                                    Exit Space
-                                </button>
-                                <iframe
-                                    src={`https://example.com/game?spaceId=${spaceID}`}
-                                    className="w-full h-[80vh] rounded-lg border-2 border-gray-800"
-                                    title="Game Space"
-                                />
-                            </div>
-                        )}
+                        }
                     </div>
                 )}
             </main>

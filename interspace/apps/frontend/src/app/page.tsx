@@ -1,12 +1,9 @@
-import Lander from ".";
+import React from 'react';
+import Lander from './lander';
 
 
 export default function Home() {
-
   return (
-    <div>
-
-      <Lander />
-    </div>
+    <Lander />
   );
 }
