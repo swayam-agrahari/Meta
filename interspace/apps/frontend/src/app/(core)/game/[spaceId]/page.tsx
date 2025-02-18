@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 export default function Game() {
     const router = useRouter();
     const [iframeError, setIframeError] = useState<boolean>(false);
+    
 
     useEffect(() => {
         try {

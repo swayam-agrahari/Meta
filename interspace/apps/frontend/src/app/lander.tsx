@@ -60,6 +60,7 @@ export default function Lander() {
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
     const [joinSpaceId, setJoinSpaceId] = useState('');
+    const [token, setToken] = useState<string | null>(null);
 
     const [dimensions, setDimensions] = useState<string>('16x16');
 
@@ -299,7 +300,7 @@ export default function Lander() {
                                 </div>
                                 <div className="flex items-center justify-center gap-4 mb-8">
                                     <code className="px-4 py-2 bg-gray-900/50 rounded-lg text-xl font-mono">
-                                        {`${spaceID},${localStorage.getItem("token")?.split(" ")[-1]}` || 'Loading...'}
+                                        {spaceID && localStorage.getItem("token") ? `${spaceID},${localStorage.getItem("token")?.split(" ").slice(-1)[0]}` : 'Loading...'}
                                     </code>
                                     <button
                                         onClick={copySpaceId}
