@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 
 
 export default function Home() {
-  const token = localStorage.getItem('token');
+
   const navigate = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     if (!token) {
       navigate.push('/login');
       return;
