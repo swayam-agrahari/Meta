@@ -45,6 +45,12 @@ const GAME_MAPS: GameMap[] = [
 ];
 
 export default function Lander() {
+    useEffect(() => {
+        if (!localStorage.getItem("token")) {
+            navigate.push("/login")
+        }
+    })
+
     const navigate = useRouter();
 
     const [view, setView] = useState<'menu' | 'create' | 'join'>('menu');
@@ -293,7 +299,7 @@ export default function Lander() {
                                 </div>
                                 <div className="flex items-center justify-center gap-4 mb-8">
                                     <code className="px-4 py-2 bg-gray-900/50 rounded-lg text-xl font-mono">
-                                        {spaceID || 'Loading...'}
+                                        {`${spaceID},${localStorage.getItem("token")?.split(" ")[-1]}` || 'Loading...'}
                                     </code>
                                     <button
                                         onClick={copySpaceId}
