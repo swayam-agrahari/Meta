@@ -60,7 +60,6 @@ export default function Lander() {
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
     const [joinSpaceId, setJoinSpaceId] = useState('');
-    const [token, setToken] = useState<string | null>(null);
 
     const [dimensions, setDimensions] = useState<string>('16x16');
 
